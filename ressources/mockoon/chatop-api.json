@@ -1,0 +1,324 @@
+{
+  "uuid": "9ce3c22b-2d1a-4a55-a7c0-56d4a7fd3b7a",
+  "lastMigration": 29,
+  "name": "ChâTop API",
+  "endpointPrefix": "api",
+  "latency": 0,
+  "port": 3001,
+  "hostname": "0.0.0.0",
+  "folders": [],
+  "routes": [
+    {
+      "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+      "type": "http",
+      "documentation": "Register a new user",
+      "method": "post",
+      "endpoint": "auth/register",
+      "responses": [
+        {
+          "uuid": "r1-success",
+          "body": "{\"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTY0MDAwMDAwMH0.dummytoken\"}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Success",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "filePath": "",
+          "databucketID": "",
+          "sendFileAsBody": false,
+          "rules": [],
+          "rulesOperator": "OR",
+          "disableTemplating": false,
+          "fallbackTo404": false,
+          "default": true
+        },
+        {
+          "uuid": "r1-error",
+          "body": "{\"message\": \"Email already exists\"}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Email exists",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "rules": [],
+          "default": false
+        }
+      ],
+      "enabled": true,
+      "responseMode": null
+    },
+    {
+      "uuid": "a2b3c4d5-e6f7-8901-bcde-f12345678901",
+      "type": "http",
+      "documentation": "Login user",
+      "method": "post",
+      "endpoint": "auth/login",
+      "responses": [
+        {
+          "uuid": "r2-success",
+          "body": "{\"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImVtYWlsIjoidGVzdEB0ZXN0LmNvbSIsImlhdCI6MTY0MDAwMDAwMH0.dummytoken\"}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Success",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": true
+        },
+        {
+          "uuid": "r2-error",
+          "body": "{\"message\": \"Invalid credentials\"}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "Unauthorized",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": false
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "uuid": "a3b4c5d6-e7f8-9012-cdef-123456789012",
+      "type": "http",
+      "documentation": "Get current user",
+      "method": "get",
+      "endpoint": "auth/me",
+      "responses": [
+        {
+          "uuid": "r3-success",
+          "body": "{\"id\": 1, \"name\": \"Test User\", \"email\": \"test@test.com\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Success",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": true
+        },
+        {
+          "uuid": "r3-error",
+          "body": "{\"message\": \"Unauthorized\"}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "Unauthorized",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": false
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "uuid": "a4b5c6d7-e8f9-0123-def0-234567890123",
+      "type": "http",
+      "documentation": "Get all rentals",
+      "method": "get",
+      "endpoint": "rentals",
+      "responses": [
+        {
+          "uuid": "r4-success",
+          "body": "{\"rentals\": [{\"id\": 1, \"name\": \"Appartement Paris\", \"surface\": 50, \"price\": 1200, \"picture\": \"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688\", \"description\": \"Bel appartement au coeur de Paris\", \"owner_id\": 1, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}]}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Success",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": true
+        },
+        {
+          "uuid": "r4-error",
+          "body": "{\"message\": \"Unauthorized\"}",
+          "latency": 0,
+          "statusCode": 401,
+          "label": "Unauthorized",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": false
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "uuid": "a5b6c7d8-e9f0-1234-ef01-345678901234",
+      "type": "http",
+      "documentation": "Get rental by ID",
+      "method": "get",
+      "endpoint": "rentals/:id",
+      "responses": [
+        {
+          "uuid": "r5-success",
+          "body": "{\"id\": 1, \"name\": \"Appartement Paris\", \"surface\": 50, \"price\": 1200, \"picture\": \"https://images.unsplash.com/photo-1502672260266-1c1ef2d93688\", \"description\": \"Bel appartement au coeur de Paris avec vue sur la Tour Eiffel\", \"owner_id\": 1, \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Success",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": true
+        },
+        {
+          "uuid": "r5-error",
+          "body": "{\"message\": \"Rental not found\"}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "Not found",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": false
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "uuid": "a6b7c8d9-e0f1-2345-f012-456789012345",
+      "type": "http",
+      "documentation": "Create new rental",
+      "method": "post",
+      "endpoint": "rentals",
+      "responses": [
+        {
+          "uuid": "r6-success",
+          "body": "{\"message\": \"Rental created!\"}",
+          "latency": 0,
+          "statusCode": 201,
+          "label": "Success",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": true
+        },
+        {
+          "uuid": "r6-error",
+          "body": "{\"message\": \"Validation error\"}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Bad request",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": false
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "uuid": "a7b8c9d0-e1f2-3456-0123-567890123456",
+      "type": "http",
+      "documentation": "Update rental",
+      "method": "put",
+      "endpoint": "rentals/:id",
+      "responses": [
+        {
+          "uuid": "r7-success",
+          "body": "{\"message\": \"Rental updated!\"}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Success",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": true
+        },
+        {
+          "uuid": "r7-error",
+          "body": "{\"message\": \"Rental not found\"}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "Not found",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": false
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "uuid": "a8b9c0d1-e2f3-4567-1234-678901234567",
+      "type": "http",
+      "documentation": "Get user by ID",
+      "method": "get",
+      "endpoint": "user/:id",
+      "responses": [
+        {
+          "uuid": "r8-success",
+          "body": "{\"id\": 1, \"name\": \"John Doe\", \"email\": \"john@example.com\", \"created_at\": \"2024-01-01T00:00:00Z\", \"updated_at\": \"2024-01-01T00:00:00Z\"}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Success",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": true
+        },
+        {
+          "uuid": "r8-error",
+          "body": "{\"message\": \"User not found\"}",
+          "latency": 0,
+          "statusCode": 404,
+          "label": "Not found",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": false
+        }
+      ],
+      "enabled": true
+    },
+    {
+      "uuid": "a9b0c1d2-e3f4-5678-2345-789012345678",
+      "type": "http",
+      "documentation": "Send message",
+      "method": "post",
+      "endpoint": "messages",
+      "responses": [
+        {
+          "uuid": "r9-success",
+          "body": "{\"message\": \"Message sent!\"}",
+          "latency": 0,
+          "statusCode": 200,
+          "label": "Success",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": true
+        },
+        {
+          "uuid": "r9-error",
+          "body": "{\"message\": \"Validation error\"}",
+          "latency": 0,
+          "statusCode": 400,
+          "label": "Bad request",
+          "headers": [{"key": "Content-Type", "value": "application/json"}],
+          "bodyType": "INLINE",
+          "default": false
+        }
+      ],
+      "enabled": true
+    }
+  ],
+  "rootChildren": [
+    {"type": "route", "uuid": "a1b2c3d4-e5f6-7890-abcd-ef1234567890"},
+    {"type": "route", "uuid": "a2b3c4d5-e6f7-8901-bcde-f12345678901"},
+    {"type": "route", "uuid": "a3b4c5d6-e7f8-9012-cdef-123456789012"},
+    {"type": "route", "uuid": "a4b5c6d7-e8f9-0123-def0-234567890123"},
+    {"type": "route", "uuid": "a5b6c7d8-e9f0-1234-ef01-345678901234"},
+    {"type": "route", "uuid": "a6b7c8d9-e0f1-2345-f012-456789012345"},
+    {"type": "route", "uuid": "a7b8c9d0-e1f2-3456-0123-567890123456"},
+    {"type": "route", "uuid": "a8b9c0d1-e2f3-4567-1234-678901234567"},
+    {"type": "route", "uuid": "a9b0c1d2-e3f4-5678-2345-789012345678"}
+  ],
+  "proxyMode": false,
+  "proxyHost": "",
+  "proxyRemovePrefix": false,
+  "tlsOptions": {
+    "enabled": false,
+    "type": "CERT",
+    "pfxPath": "",
+    "certPath": "",
+    "keyPath": "",
+    "caPath": "",
+    "passphrase": ""
+  },
+  "cors": true,
+  "headers": [
+    {"key": "Content-Type", "value": "application/json"},
+    {"key": "Access-Control-Allow-Origin", "value": "*"},
+    {"key": "Access-Control-Allow-Methods", "value": "GET,POST,PUT,DELETE,OPTIONS"},
+    {"key": "Access-Control-Allow-Headers", "value": "Content-Type,Authorization"}
+  ],
+  "proxyReqHeaders": [{"key": "", "value": ""}],
+  "proxyResHeaders": [{"key": "", "value": ""}],
+  "data": []
+}
