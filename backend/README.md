@@ -1,98 +1,118 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# ChâTop - Back-end API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+API REST du portail de location saisonnière ChâTop, développée avec NestJS 11 et Prisma 7.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Démarrage 
 
-## Description
+### Prérequis
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+- **Node.js** 22 LTS ou supérieur
+- **npm** 
+- **MySQL** 9.6+
 
-## Project setup
+### Installation
 
 ```bash
-$ npm install
+cd backend
+npm install
 ```
 
-## Compile and run the project
+### Configuration
+
+Créez un fichier `.env` à la racine du dossier `backend/` :
+
+```env
+DATABASE_URL="mysql://<user>:<password>@localhost:3306/chatop_db"
+JWT_SECRET="secret_jwt"
+```
+
+### Base de données
+
+La base de données `chatop_db` doit avoir les tables `USERS`, `RENTALS` et `MESSAGES`.
+Le schéma SQL est disponible dans `../ressources/sql/schema.sql`.
+
+Après configuration du `.env`, il faut générer le client Prisma :
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npx prisma generate
 ```
 
-## Run tests
+### Lancer le serveur
 
 ```bash
-# unit tests
-$ npm run test
+# Mode développement
+npm run start:dev
 
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+# Mode production
+npm run start:prod
 ```
 
-## Deployment
+Le serveur démarre sur [http://localhost:3001](http://localhost:3001).
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+## Documentation API
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+La documentation Swagger est accessible à :
 
-```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+**[http://localhost:3001/api-docs](http://localhost:3001/api-docs)**
+
+Pour tester les routes protégées dans Swagger :
+1. Exécutez `POST /api/auth/login`
+2. Copiez la valeur du champ `token`
+3. Cliquez sur **Authorize** en haut à droite et collez le token
+
+## 🔗 Routes
+
+### Publiques
+
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| POST | `/api/auth/register` | Créer un compte |
+| POST | `/api/auth/login` | Se connecter — retourne un token JWT |
+
+### Protégées (token JWT requis)
+
+| Méthode | Route | Description |
+|---------|-------|-------------|
+| GET | `/api/auth/me` | Utilisateur connecté |
+| GET | `/api/rentals` | Liste des locations |
+| GET | `/api/rentals/:id` | Détail d'une location |
+| POST | `/api/rentals` | Créer une location |
+| PUT | `/api/rentals/:id` | Modifier une location |
+| GET | `/api/user/:id` | Obtenir un utilisateur |
+| POST | `/api/messages` | Envoyer un message |
+
+Toutes les routes protégées nécessitent le header :
+```
+Authorization: Bearer <token>
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## Architecture
 
-## Resources
+```
+src/
+├── auth/        # Register, login, me — authentification JWT
+├── rentals/     # CRUD locations + upload image
+├── user/        # Consultation utilisateur
+├── messages/    # Envoi de messages
+└── prisma/      # Service d'accès base de données
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+Architecture **Controller / Service / Repository (PrismaService)**.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## Sécurité
 
-## Support
+- ✅ JWT obligatoire pour toutes les routes (sauf register, login, `/api-docs`)
+- ✅ Mots de passe chiffrés avec bcrypt
+- ✅ Variables d'environnement pour les credentials (`.env`)
+- ✅ Validation des entrées utilisateur (DTOs + class-validator)
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+## Technologies
 
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+- **NestJS 11** — Framework back-end
+- **TypeScript 5** — Mode ESM strict
+- **Prisma 7** — ORM avec driver adapter MariaDB pour MySQL
+- **Passport + JWT** — Authentification
+- **bcrypt** — Chiffrement des mots de passe
+- **class-validator** — Validation des DTOs
+- **multer** — Upload d'images
+- **@nestjs/swagger** — Documentation OpenAPI
