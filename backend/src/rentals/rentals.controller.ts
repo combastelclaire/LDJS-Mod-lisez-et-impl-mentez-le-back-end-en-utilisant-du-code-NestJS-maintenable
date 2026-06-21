@@ -85,7 +85,11 @@ export class RentalsController {
   @Put(':id')
   @ApiConsumes('multipart/form-data')
   @UseInterceptors(FileInterceptor('picture', { storage: multerStorage, fileFilter: imageFilter }))
-  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateRentalDto, @Request() req: RequestWithUser) {
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateRentalDto,
+    @Request() req: RequestWithUser,
+  ) {
     return this.rentalsService.update(id, dto, req.user.id);
   }
 }

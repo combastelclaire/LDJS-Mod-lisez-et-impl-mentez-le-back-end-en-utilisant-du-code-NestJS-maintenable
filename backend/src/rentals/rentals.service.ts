@@ -48,7 +48,7 @@ export class RentalsService {
         picture: pictureUrl,
       },
     });
-    return { message: 'Rental created !' };
+    return { message: 'Location créée!' };
   }
 
   async update(id: number, dto: UpdateRentalDto, userId: number) {
@@ -64,6 +64,6 @@ export class RentalsService {
         ...(dto.description && { description: dto.description }),
       },
     });
-    return { message: 'Rental updated !' };
+    return { message: 'Location modifiée!' };
   }
 }

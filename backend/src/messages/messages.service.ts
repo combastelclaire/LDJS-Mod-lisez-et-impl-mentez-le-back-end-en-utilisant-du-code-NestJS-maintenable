@@ -14,6 +14,6 @@ export class MessagesService {
         message: dto.message,
       },
     });
-    return { message: 'Message send with success' };
+    return { message: 'Message envoyé avec succès' };
   }
 }
