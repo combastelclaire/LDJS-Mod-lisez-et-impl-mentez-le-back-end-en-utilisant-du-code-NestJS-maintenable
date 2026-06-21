@@ -6,11 +6,11 @@ import { CreateMessageDto } from './create-message.dto.js';
 export class MessagesService {
   constructor(private prisma: PrismaService) {}
 
-  async create(dto: CreateMessageDto) {
+  async create(dto: CreateMessageDto, userId: number) {
     await this.prisma.message.create({
       data: {
         rental_id: dto.rental_id,
-        user_id: dto.user_id,
+        user_id: userId,
         message: dto.message,
       },
     });

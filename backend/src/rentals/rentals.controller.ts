@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   Request,
@@ -31,6 +32,15 @@ const multerStorage = diskStorage({
   },
 });
 
+const imageFilter = (_req: Express.Request, file: Express.Multer.File, cb: (error: Error | null, acceptFile: boolean) => void) => {
+  const allowed = ['image/jpeg', 'image/png', 'image/webp'];
+  if (allowed.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Seules les images au format JPEG, PNG et WebP sont acceptées'), false);
+  }
+};
+
 @ApiBearerAuth()
 @ApiTags('Rentals')
 @UseGuards(JwtAuthGuard)
@@ -44,8 +54,8 @@ export class RentalsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.rentalsService.findOne(Number(id));
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.rentalsService.findOne(id);
   }
 
   @Post()
@@ -62,7 +72,7 @@ export class RentalsController {
       },
     },
   })
-  @UseInterceptors(FileInterceptor('picture', { storage: multerStorage }))
+  @UseInterceptors(FileInterceptor('picture', { storage: multerStorage, fileFilter: imageFilter }))
   create(
     @Body() dto: CreateRentalDto,
     @UploadedFile() file: Express.Multer.File,
@@ -74,8 +84,8 @@ export class RentalsController {
 
   @Put(':id')
   @ApiConsumes('multipart/form-data')
-  @UseInterceptors(FileInterceptor('picture', { storage: multerStorage }))
-  update(@Param('id') id: string, @Body() dto: UpdateRentalDto) {
-    return this.rentalsService.update(Number(id), dto);
+  @UseInterceptors(FileInterceptor('picture', { storage: multerStorage, fileFilter: imageFilter }))
+  update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateRentalDto, @Request() req: RequestWithUser) {
+    return this.rentalsService.update(id, dto, req.user.id);
   }
 }

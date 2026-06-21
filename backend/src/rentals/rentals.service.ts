@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ForbiddenException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service.js';
 import { CreateRentalDto } from './create-rental.dto.js';
 import { UpdateRentalDto } from './update-rental.dto.js';
@@ -33,7 +33,7 @@ export class RentalsService {
       where: { id },
       include: { owner: { select: ownerSelect } },
     });
-    if (!rental) throw new NotFoundException('Rental not found');
+    if (!rental) throw new NotFoundException('Location introuvable');
     return { ...rental, surface: Number(rental.surface), price: Number(rental.price) };
   }
 
@@ -51,9 +51,10 @@ export class RentalsService {
     return { message: 'Rental created !' };
   }
 
-  async update(id: number, dto: UpdateRentalDto) {
+  async update(id: number, dto: UpdateRentalDto, userId: number) {
     const rental = await this.prisma.rental.findUnique({ where: { id } });
-    if (!rental) throw new NotFoundException('Rental not found');
+    if (!rental) throw new NotFoundException('Location introuvable');
+    if (rental.owner_id !== userId) throw new ForbiddenException('Accès refusé');
     await this.prisma.rental.update({
       where: { id },
       data: {

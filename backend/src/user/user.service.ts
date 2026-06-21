@@ -10,7 +10,7 @@ export class UserService {
       where: { id },
       select: { id: true, name: true, email: true, created_at: true, updated_at: true },
     });
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException('Utilisateur introuvable');
     return user;
   }
 }
